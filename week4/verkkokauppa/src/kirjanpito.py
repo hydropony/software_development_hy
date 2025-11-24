@@ -1,9 +1,9 @@
-class Kirjanpito:
+class Ledger:
     def __init__(self):
-        self.tapahtumat = []
+        self.transactions = []
 
-    def lisaa_tapahtuma(self, tapahtuma):
-        self.tapahtumat.append(tapahtuma)
+    def add_transaction(self, transaction):
+        self.transactions.append(transaction)
 
 
-kirjanpito = Kirjanpito()
+ledger = Ledger()

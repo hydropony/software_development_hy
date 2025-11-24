@@ -1,29 +1,29 @@
-from ostoskori import Ostoskori
+from ostoskori import ShoppingCart
 
-class Kauppa:
-    def __init__(self, varasto, pankki,viitegeneraattori):
-        self._varasto = varasto
-        self._pankki = pankki
-        self._viitegeneraattori = viitegeneraattori
-        self._kaupan_tili = "33333-44455"
+class Shop:
+    def __init__(self, warehouse, bank, reference_generator):
+        self._warehouse = warehouse
+        self._bank = bank
+        self._reference_generator = reference_generator
+        self._shop_account = "33333-44455"
 
 
-    def aloita_asiointi(self):
-        self._ostoskori = Ostoskori()
+    def start_shopping(self):
+        self._shopping_cart = ShoppingCart()
 
-    def poista_korista(self, id):
-        tuote = self._varasto.hae_tuote(id)
-        self._ostoskori.poista(tuote)
-        self._varasto.palauta_varastoon(tuote)
+    def remove_from_cart(self, id):
+        product = self._warehouse.get_product(id)
+        self._shopping_cart.remove(product)
+        self._warehouse.return_to_warehouse(product)
 
-    def lisaa_koriin(self, id):
-        if self._varasto.saldo(id) > 0:
-            tuote = self._varasto.hae_tuote(id)
-            self._ostoskori.lisaa(tuote)
-            self._varasto.ota_varastosta(tuote)
+    def add_to_cart(self, id):
+        if self._warehouse.balance(id) > 0:
+            product = self._warehouse.get_product(id)
+            self._shopping_cart.add(product)
+            self._warehouse.take_from_warehouse(product)
 
-    def tilimaksu(self, nimi, tili_numero):
-        viite = self._viitegeneraattori.uusi()
-        summa = self._ostoskori.hinta()
+    def account_payment(self, name, account_number):
+        reference = self._reference_generator.new()
+        amount = self._shopping_cart.price()
 
-        return self._pankki.tilisiirto(nimi, viite, tili_numero, self._kaupan_tili, summa)
+        return self._bank.bank_transfer(name, reference, account_number, self._shop_account, amount)

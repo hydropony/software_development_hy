@@ -1,8 +1,8 @@
-class Tuote:
-    def __init__(self, id, nimi, hinta):
+class Product:
+    def __init__(self, id, name, price):
         self.id = id
-        self.nimi = nimi
-        self.hinta = hinta
+        self.name = name
+        self.price = price
 
     def __hash__(self):
         return hash(self.id)
@@ -11,4 +11,4 @@ class Tuote:
         return self.id == other.id
 
     def __str__(self):
-        return self.nimi
+        return self.name

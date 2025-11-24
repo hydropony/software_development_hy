@@ -1,32 +1,32 @@
-from kauppa import Kauppa
-from kirjanpito import kirjanpito
-from varasto import varasto
-from pankki import pankki
-from viitegeneraattori import viitegeneraattori
+from kauppa import Shop
+from kirjanpito import ledger
+from varasto import warehouse
+from pankki import bank
+from viitegeneraattori import reference_generator
 
 def main():
-    # käytetään valmiiksi luotuja "oletusarvoisia" varasto-, pankki- ja viitegeneraattoriolioita
-    kauppa = Kauppa(varasto, pankki, viitegeneraattori)
+    # use pre-created "default" warehouse, bank and reference generator objects
+    shop = Shop(warehouse, bank, reference_generator)
 
-    # kauppa hoitaa yhden asiakkaan kerrallaan seuraavaan tapaan:
-    kauppa.aloita_asiointi()
-    kauppa.lisaa_koriin(1)
-    kauppa.lisaa_koriin(3)
-    kauppa.lisaa_koriin(3)
-    kauppa.poista_korista(1)
-    kauppa.tilimaksu("Pekka Mikkola", "1234-12345")
+    # shop handles one customer at a time in the following way:
+    shop.start_shopping()
+    shop.add_to_cart(1)
+    shop.add_to_cart(3)
+    shop.add_to_cart(3)
+    shop.remove_from_cart(1)
+    shop.account_payment("Pekka Mikkola", "1234-12345")
 
-    # seuraava asiakas
-    kauppa.aloita_asiointi()
+    # next customer
+    shop.start_shopping()
 
     for _ in range(0, 24):
-        kauppa.lisaa_koriin(5)
+        shop.add_to_cart(5)
 
-    kauppa.tilimaksu("Arto Vihavainen", "3425-1652")
+    shop.account_payment("Arto Vihavainen", "3425-1652")
 
-    # kirjanpito
-    for tapahtuma in kirjanpito.tapahtumat:
-        print(tapahtuma)
+    # ledger
+    for transaction in ledger.transactions:
+        print(transaction)
 
 
 if __name__ == "__main__":

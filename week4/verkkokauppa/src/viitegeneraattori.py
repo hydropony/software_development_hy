@@ -1,11 +1,11 @@
-class Viitegeneraattori:
+class ReferenceGenerator:
     def __init__(self):
-        self._seuraava = 1
+        self._next = 1
 
-    def uusi(self):
-        self._seuraava = self._seuraava + 1
+    def new(self):
+        self._next = self._next + 1
 
-        return self._seuraava
+        return self._next
 
 
-viitegeneraattori = Viitegeneraattori()
+reference_generator = ReferenceGenerator()

@@ -1,17 +1,17 @@
-from kirjanpito import kirjanpito as default_kirjanpito
+from kirjanpito import ledger as default_ledger
 
 
-class Pankki:
-    def __init__(self, kirjanpito=default_kirjanpito):
-        self._kirjanpito = kirjanpito
+class Bank:
+    def __init__(self, ledger=default_ledger):
+        self._ledger = ledger
 
-    def tilisiirto(self, nimi, viitenumero, tililta, tilille, summa):
-        self._kirjanpito.lisaa_tapahtuma(
-            f"tilisiirto: tililtä {tililta} tilille {tilille} viite {viitenumero} summa {summa}e"
+    def bank_transfer(self, name, reference_number, from_account, to_account, amount):
+        self._ledger.add_transaction(
+            f"bank transfer: from account {from_account} to account {to_account} reference {reference_number} amount {amount}e"
         )
 
-        # täällä olisi koodi joka ottaa yhteyden pankin verkkorajapintaan
+        # here would be code that connects to the bank's web API
         return True
 
 
-pankki = Pankki()
+bank = Bank()
