@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .mode-selector {
+            margin-bottom: 30px;
+        }
+
+        .mode-selector label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .mode-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .mode-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .mode-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .score-value.player {
+            color: #28a745;
+        }
+
+        .score-value.ai {
+            color: #dc3545;
+        }
+
+        .score-value.draws {
+            color: #ffc107;
+        }
+
+        .game-area {
+            margin-bottom: 30px;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .choice-btn {
+            width: 100px;
+            height: 100px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #e6e6e6, #ffffff);
+            box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .choice-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 8px 8px 20px #c1c1c1, -8px -8px 20px #ffffff;
+        }
+
+        .choice-btn:active {
+            transform: scale(0.95);
+        }
+
+        .result-area {
+            min-height: 150px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .result-moves {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .move-display {
+            text-align: center;
+        }
+
+        .move-display .label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .move-display .move {
+            font-size: 3em;
+        }
+
+        .vs {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #999;
+        }
+
+        .result-text {
+            font-size: 1.5em;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+
+        .result-text.win {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .result-text.lose {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .result-text.draw {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .waiting {
+            color: #999;
+            font-style: italic;
+        }
+
+        .new-game-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .new-game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .choice-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .choice-btn:disabled:hover {
+            transform: none;
+            box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff;
+        }
+
+        .game-over-text {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .game-over-text.player-wins {
+            color: #28a745;
+        }
+
+        .game-over-text.ai-wins {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Rock Paper Scissors</h1>
+        <p class="subtitle">First to <span id="wins-needed">5</span> wins!</p>
+
+        <div class="mode-selector">
+            <label>Choose your opponent:</label>
+            <div class="mode-buttons">
+                <button class="mode-btn active" data-mode="basic">Basic AI</button>
+                <button class="mode-btn" data-mode="improved">Improved AI</button>
+            </div>
+        </div>
+
+        <div class="score-board">
+            <div class="score-item">
+                <div class="score-label">You</div>
+                <div class="score-value player" id="player-score">0</div>
+            </div>
+            <div class="score-item">
+                <div class="score-label">Draws</div>
+                <div class="score-value draws" id="draws-score">0</div>
+            </div>
+            <div class="score-item">
+                <div class="score-label">AI</div>
+                <div class="score-value ai" id="ai-score">0</div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="choices">
+                <button class="choice-btn" data-move="r" title="Rock">🪨</button>
+                <button class="choice-btn" data-move="p" title="Paper">📄</button>
+                <button class="choice-btn" data-move="s" title="Scissors">✂️</button>
+            </div>
+        </div>
+
+        <div class="result-area">
+            <div id="result-content">
+                <p class="waiting">Choose your move to start playing!</p>
+            </div>
+        </div>
+
+        <button class="new-game-btn" id="new-game">New Game</button>
+    </div>
+
+    <script>
+        let currentMode = 'basic';
+        let gameOver = false;
+
+        // Initialize game on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            startNewGame();
+        });
+
+        // Mode selection
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMode = btn.dataset.mode;
+                startNewGame();
+            });
+        });
+
+        // Choice buttons
+        document.querySelectorAll('.choice-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (!gameOver) {
+                    playMove(btn.dataset.move);
+                }
+            });
+        });
+
+        // New game button
+        document.getElementById('new-game').addEventListener('click', startNewGame);
+
+        function setButtonsDisabled(disabled) {
+            document.querySelectorAll('.choice-btn').forEach(btn => {
+                btn.disabled = disabled;
+            });
+        }
+
+        async function startNewGame() {
+            try {
+                const response = await fetch('/api/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ai_type: currentMode })
+                });
+                const data = await response.json();
+                
+                // Reset game state
+                gameOver = false;
+                setButtonsDisabled(false);
+                
+                // Update wins needed
+                if (data.wins_needed) {
+                    document.getElementById('wins-needed').textContent = data.wins_needed;
+                }
+                
+                // Reset scores
+                document.getElementById('player-score').textContent = '0';
+                document.getElementById('ai-score').textContent = '0';
+                document.getElementById('draws-score').textContent = '0';
+                
+                // Reset result area
+                document.getElementById('result-content').innerHTML = 
+                    `<p class="waiting">Playing against ${currentMode === 'improved' ? 'Improved' : 'Basic'} AI. Make your move!</p>`;
+            } catch (error) {
+                console.error('Error starting game:', error);
+            }
+        }
+
+        async function playMove(move) {
+            try {
+                const response = await fetch('/api/play', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ move: move })
+                });
+                const data = await response.json();
+                
+                if (data.error && !data.game_over) {
+                    alert(data.error);
+                    return;
+                }
+
+                // Update scores
+                document.getElementById('player-score').textContent = data.score.player;
+                document.getElementById('ai-score').textContent = data.score.ai;
+                document.getElementById('draws-score').textContent = data.score.draws;
+
+                // Show result
+                const moveEmojis = { 'Rock': '🪨', 'Paper': '📄', 'Scissors': '✂️' };
+                const resultMessages = {
+                    'win': '🎉 You Win!',
+                    'lose': '😢 You Lose!',
+                    'draw': '🤝 Draw!'
+                };
+
+                let resultHtml = `
+                    <div class="result-moves">
+                        <div class="move-display">
+                            <div class="label">You</div>
+                            <div class="move">${moveEmojis[data.player_move]}</div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="move-display">
+                            <div class="label">AI</div>
+                            <div class="move">${moveEmojis[data.ai_move]}</div>
+                        </div>
+                    </div>
+                    <div class="result-text ${data.result}">${resultMessages[data.result]}</div>
+                `;
+
+                // Check for game over
+                if (data.game_over) {
+                    gameOver = true;
+                    setButtonsDisabled(true);
+                    const winnerText = data.winner === 'player' 
+                        ? '🏆 You Won the Game! 🏆' 
+                        : '🤖 AI Won the Game! 🤖';
+                    const winnerClass = data.winner === 'player' ? 'player-wins' : 'ai-wins';
+                    resultHtml = `
+                        <div class="game-over-text ${winnerClass}">${winnerText}</div>
+                        ${resultHtml}
+                        <p style="margin-top: 15px; color: #666;">Click "New Game" to play again!</p>
+                    `;
+                }
+
+                document.getElementById('result-content').innerHTML = resultHtml;
+            } catch (error) {
+                console.error('Error playing move:', error);
+            }
+        }
+    </script>
+</body>
+</html>
